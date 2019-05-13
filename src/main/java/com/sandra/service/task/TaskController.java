@@ -26,6 +26,8 @@ public class TaskController {
     public @ResponseBody Task createTask(
             @RequestParam("userId") Integer userId,
             @RequestBody Task task){
+        Task task1= new Task();
+        task1.setTitle(task.getTitle());
         task.setUserId(userId);
         return  repository.save(task);
     }
@@ -70,7 +72,6 @@ public class TaskController {
         }
         t.setId(taskId);
         t.setDescription(task.getDescription());
-        t.setDifficulty(task.getDifficulty());
         t.setDueDate(task.getDueDate());
         t.setReminder(task.getReminder());
         t.setTitle(task.getTitle());

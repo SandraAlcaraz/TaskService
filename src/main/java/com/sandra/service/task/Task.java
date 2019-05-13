@@ -14,11 +14,24 @@ public class Task {
     private Integer userId;
     private String title;
     private String description;
-    private String difficulty;
     private String dueDate;
     private String reminder;
     private Boolean done;
     private String completionDate;
+
+    public Task(){
+
+    }
+
+   public Task( String title, String description,  String dueDate,
+               String reminder, Boolean done, String completionDate){
+        this.title=title;
+        this.description=description;
+        this.dueDate=dueDate;
+        this.reminder=reminder;
+        this.done=done;
+        this.completionDate=completionDate;
+   }
 
 
     public Integer getId() {
@@ -53,13 +66,6 @@ public class Task {
         this.description = description;
     }
 
-    public String getDifficulty() {
-        return difficulty;
-    }
-
-    public void setDifficulty(String difficulty) {
-        this.difficulty = difficulty;
-    }
 
     public String getDueDate() {
         return dueDate;
