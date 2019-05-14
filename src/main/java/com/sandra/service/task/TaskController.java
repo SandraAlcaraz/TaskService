@@ -9,6 +9,8 @@ import java.util.List;
 @RestController
 public class TaskController {
 
+
+
     @Autowired
     private TaskRepository repository;
 
@@ -25,9 +27,12 @@ public class TaskController {
     @PostMapping(path = "/users/tasks")
     public @ResponseBody Task createTask(
             @RequestParam("userId") Integer userId,
-            @RequestBody Task task){
-        Task task1= new Task();
-        task1.setTitle(task.getTitle());
+            @RequestBody TaskDTO taskDto){
+        Task task0 = new Task();
+        Task task= mappingTask(task0, taskDto);
+        if(!JSONValidator.validator(task)){
+            throw new NotAcceptableJSON();
+        }
         task.setUserId(userId);
         return  repository.save(task);
     }
@@ -64,21 +69,18 @@ public class TaskController {
     @PutMapping(path = "/users/tasks/{taskId}")
     public Task updateTaskForUser(@PathVariable Integer taskId,
                                   @RequestParam("userId") Integer userId,
-                                  @RequestBody Task task){
-        Task t= repository.findByIdAndUserId(taskId,userId );
-
-        if(t==null){
+                                  @RequestBody TaskDTO taskDto){
+        Task task= repository.findByIdAndUserId(taskId,userId );
+        if(task==null){
             throw new TaskNotFoundException();
         }
-        t.setId(taskId);
-        t.setDescription(task.getDescription());
-        t.setDueDate(task.getDueDate());
-        t.setReminder(task.getReminder());
-        t.setTitle(task.getTitle());
-        t.setDone(task.getDone());
-        t.setCompletionDate(task.getCompletionDate());
-        repository.save(t);
-        return t;
+
+       Task task2=mappingTask(task, taskDto);
+        if(!JSONValidator.validator(task2)){
+            throw new NotAcceptableJSON();
+        }
+        repository.save(task2);
+        return task2;
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Task or user not found")
@@ -87,5 +89,28 @@ public class TaskController {
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "User not found")
     public  class UserNotFoundException extends RuntimeException{
     }
+    @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE, reason = "Json not acceptable")
+    public  class NotAcceptableJSON extends RuntimeException{
+    }
+
+    @ResponseStatus(value = HttpStatus.CREATED, reason = "Successful Creation")
+    public class ObjectCreated{
+
+    }
+
+    public static Task mappingTask(Task task, TaskDTO taskDto){
+        task.setDescription(taskDto.getDescription());
+        task.setDueDate(taskDto.getDueDate());
+        task.setReminder(taskDto.getReminder());
+        task.setTitle(taskDto.getTitle());
+        task.setDone(taskDto.getDone());
+        task.setCompletionDate(taskDto.getCompletionDate());
+        return task;
+    }
+
+
+
+
+
 
 }
