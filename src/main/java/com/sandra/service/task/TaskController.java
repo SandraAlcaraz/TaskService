@@ -99,6 +99,8 @@ public class TaskController {
     }
 
     public static Task mappingTask(Task task, TaskDTO taskDto){
+        if(task== null){
+            task= new Task(); }
         task.setDescription(taskDto.getDescription());
         task.setDueDate(taskDto.getDueDate());
         task.setReminder(taskDto.getReminder());

@@ -20,19 +20,19 @@ public class JSONValidator {
             return false;
         }
         if(json.getDescription()==null||json.getTitle()==null){
-            LOGGER.log( Level.FINE, "No description");
+            LOGGER.log( Level.FINE, "No description or title");
             return false;
         }
-        if(json.getDueDate()==null||!isDateValid(json.getDueDate())){
+        if(json.getDueDate()==null||!isDateValid(json.getDueDate(), DATE_FORMAT)){
             LOGGER.log( Level.FINE, "Invalid due date");
             return false;
         }
-        if((json.getCompletionDate()!=null)&&(!isDateValid(json.getCompletionDate()))){
+        if((json.getCompletionDate()!=null)&&(!isDateValid(json.getCompletionDate(), DATE_FORMAT))){
             LOGGER.log( Level.FINE, "Invalid completion date");
             return false;
 
         }
-        if(json.getReminder()==null||!isReminderValid(json.getReminder())){
+        if(json.getReminder()==null||!isDateValid(json.getReminder(), DATE_REMINDER)){
             LOGGER.log( Level.FINE, "invalid reminder format" );
             return false;
         }
@@ -47,22 +47,12 @@ public class JSONValidator {
 
         return true;
     }
-    public static boolean isReminderValid(String date)
-    {
-        try {
-            DateFormat df = new SimpleDateFormat(DATE_REMINDER);
-            df.setLenient(false);
-            df.parse(date);
-            return true;
-        } catch (ParseException e) {
-            return false;
-        }
-    }
 
-    public static boolean isDateValid(String date)
+
+    public static boolean isDateValid(String date, String format)
     {
         try {
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            DateFormat df = new SimpleDateFormat(format);
             df.setLenient(false);
             df.parse(date);
             return true;
